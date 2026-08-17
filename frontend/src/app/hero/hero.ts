@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-
+import { Component, OnDestroy, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
+
 interface StatCounter {
   label: string;
   target: number;
@@ -12,7 +11,7 @@ interface StatCounter {
 
 @Component({
   selector: 'app-hero',
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './hero.html',
   styleUrl: './hero.css',
 })
@@ -76,25 +75,30 @@ export class Hero implements OnInit, OnDestroy {
 
   private rafId?: number;
 
-  ngOnInit(): void {
-    this.rotationTimer = setInterval(() => {
-      this.wordIndex = (this.wordIndex + 1) % this.rotatingWords.length;
-    }, 2200);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-    this.animateStats();
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.rotationTimer = setInterval(() => {
+        this.wordIndex = (this.wordIndex + 1) % this.rotatingWords.length;
+      }, 2200);
+
+      this.animateStats();
+    }
   }
 
   ngOnDestroy(): void {
     if (this.rotationTimer) {
       clearInterval(this.rotationTimer);
     }
-    if (this.rafId) {
+    if (this.rafId && isPlatformBrowser(this.platformId)) {
       cancelAnimationFrame(this.rafId);
     }
   }
 
   /** Eases every stat counter from 0 up to its target over ~1.4s */
   private animateStats(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const duration = 1400;
     const start = performance.now();
 
@@ -139,3 +143,4 @@ export class Hero implements OnInit, OnDestroy {
     this.isFocused = false;
   }
 }
+
