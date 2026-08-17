@@ -92,96 +92,78 @@
   letter-spacing: -0.02em;
 }
 
-/* ---------------- Ambient background ---------------- */
+/* ---------------- Ambient Decorative Backdrop & Registration Watermarks ---------------- */
 
-.bg-shapes {
+.bg-decor {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  z-index: 0;
 }
 
-.bg-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 80%);
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 80%);
-}
-
-.shape {
+.orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.45;
+  filter: blur(70px);
+  opacity: 0.42;
+  animation: drift 16s ease-in-out infinite;
 }
 
-.shape-a {
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(251, 176, 59, 0.15), transparent 70%);
-}
-
-.shape-b {
-  bottom: -150px;
+.orb-violet {
+  width: 420px;
+  height: 420px;
+  top: -120px;
   left: -100px;
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(137, 80, 255, 0.18), transparent 70%);
+  background: radial-gradient(circle, #7c5cfc 0%, transparent 70%);
+  animation-duration: 18s;
 }
 
-.shape-c {
-  top: -150px;
-  right: -100px;
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(251, 176, 59, 0.12), transparent 70%);
+.orb-gold {
+  width: 320px;
+  height: 320px;
+  bottom: -80px;
+  right: -60px;
+  background: radial-gradient(circle, #f4b740 0%, transparent 70%);
+  animation-duration: 22s;
+  animation-delay: -4s;
 }
 
-/* ---------------- Watermark Floating Particles ---------------- */
+.orb-rose {
+  width: 260px;
+  height: 260px;
+  top: 40%;
+  right: 12%;
+  background: radial-gradient(circle, #ff6b81 0%, transparent 70%);
+  animation-duration: 20s;
+  animation-delay: -8s;
+}
 
-.watermark-particle {
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -25px) scale(1.08); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+.particle {
   position: absolute;
-  color: var(--gold-primary);
-  opacity: 0.18;
-  pointer-events: none;
-  filter: drop-shadow(0 0 8px rgba(251, 176, 59, 0.25));
+  font-size: 1.25rem;
+  opacity: 0.28;
+  animation: float-particle 12s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
-.watermark-particle svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+.p1 { top: 12%; left: 8%; animation-duration: 13s; }
+.p2 { top: 22%; right: 10%; animation-duration: 15s; animation-delay: -2s; }
+.p3 { top: 65%; left: 6%; animation-duration: 11s; animation-delay: -5s; }
+.p4 { top: 78%; right: 14%; animation-duration: 14s; animation-delay: -1s; }
+.p5 { top: 45%; left: 3%; animation-duration: 16s; animation-delay: -7s; font-size: 1.1rem; }
+.p6 { top: 8%; right: 30%; animation-duration: 17s; animation-delay: -3s; font-size: 1.1rem; }
+.p7 { bottom: 6%; left: 30%; animation-duration: 13s; animation-delay: -6s; }
 
-.p1 { top: 12%; left: 8%; width: 48px; height: 48px; animation: float-w1 12s ease-in-out infinite; }
-.p2 { top: 22%; right: 10%; width: 44px; height: 44px; animation: float-w2 14s ease-in-out infinite; color: var(--text-lavender); opacity: 0.14; }
-.p3 { bottom: 18%; left: 10%; width: 52px; height: 52px; animation: float-w3 15s ease-in-out infinite; }
-.p4 { bottom: 22%; right: 8%; width: 40px; height: 40px; animation: float-w1 10s ease-in-out infinite; color: var(--gold-soft); }
-.p5 { top: 52%; left: 4%; width: 46px; height: 46px; animation: float-w2 16s ease-in-out infinite; opacity: 0.15; }
-.p6 { top: 58%; right: 5%; width: 50px; height: 50px; animation: float-w3 13s ease-in-out infinite; }
-.p7 { top: 8%; left: 42%; width: 38px; height: 38px; animation: float-w2 11s ease-in-out infinite; color: var(--gold-soft); opacity: 0.14; }
-.p8 { bottom: 10%; right: 36%; width: 42px; height: 42px; animation: float-w1 15s ease-in-out infinite; opacity: 0.15; }
-
-@keyframes float-w1 {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-  50% { transform: translateY(-24px) rotate(8deg) scale(1.08); }
-}
-
-@keyframes float-w2 {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-  50% { transform: translateY(22px) rotate(-10deg) scale(1.05); }
-}
-
-@keyframes float-w3 {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-  50% { transform: translateY(-18px) rotate(6deg) scale(1.1); }
+@keyframes float-particle {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.24; }
+  50% { transform: translateY(-20px) rotate(8deg); opacity: 0.4; }
 }
 
 /* ============================================================
@@ -306,6 +288,18 @@
 }
 
 .alert-error .alert-icon { background: var(--danger); color: #1B1537; }
+
+.alert-action-link {
+  color: var(--gold-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.alert-action-link:hover {
+  color: var(--gold-soft);
+}
 
 /* ============================================================
    FORM & INPUTS

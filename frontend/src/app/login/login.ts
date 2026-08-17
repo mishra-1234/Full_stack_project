@@ -34,6 +34,7 @@ export class Login {
   submitted = false;
 
   errorMessage = '';
+  errorType: 'none' | 'not_registered' | 'wrong_password' | 'server' | 'generic' = 'none';
   successMessage = '';
 
   currentYear = new Date().getFullYear();
@@ -76,6 +77,7 @@ export class Login {
 
   private resetMessages(): void {
     this.errorMessage = '';
+    this.errorType = 'none';
     this.successMessage = '';
   }
 
@@ -119,12 +121,21 @@ export class Login {
   private handleLoginError(err: HttpErrorResponse): void {
     this.isLoading = false;
 
-    if (err.status === 401 || err.status === 400 || err.status === 404) {
-      this.errorMessage = 'Invalid email or password';
+    if (err.status === 404) {
+      // User email not found in database
+      this.errorType = 'not_registered';
+      this.errorMessage = 'This email is not registered. Please sign up first.';
+    } else if (err.status === 401) {
+      // Password mismatch
+      this.errorType = 'wrong_password';
+      this.errorMessage = 'Incorrect password. Try again or reset your password.';
     } else if (err.status === 0) {
+      this.errorType = 'server';
       this.errorMessage = 'Unable to reach server. Please check your connection.';
     } else {
+      this.errorType = 'generic';
       this.errorMessage = 'Something went wrong. Please try again.';
     }
   }
 }
+

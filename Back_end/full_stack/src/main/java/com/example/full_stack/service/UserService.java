@@ -37,6 +37,21 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public boolean resetPassword(String email, String newPassword) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+        User user = userOptional.get();
+        user.setPassword(newPassword);
+        userRepository.save(user);
+        return true;
+    }
+
     public LoginResponse loginUser(String email, String password) {
 
         Optional<User> userOptional = userRepository.findByEmail(email);
