@@ -37,11 +37,14 @@ This platform implements an automated **Order Orchestration Engine** using messa
   
 ---
 
-👥 Contributors
-Dibyajeet Mishra (@mishra-1234)
-Mrutyunjaya Sahoo (@Mrutyunjaya940)
-Samar pratap singh (@Mr-Samar-9708)
-Rosan Kumar Das (@KumarRosan7)
+## 👥 Contributors
 
-🌟 Show Your Support
+* [**Dibyajeet Mishra**](https://github.com/mishra-1234)
+* [**Mrutyunjaya Sahoo**](https://github.com/Mrutyunjaya940)
+* [**Samar Pratap Singh**](https://github.com/Mr-Samar-9708)
+* [**Rosan Kumar Das**](https://github.com/KumarRosan7)
+
+---
+
+## 🌟 Show Your Support
 Give a ⭐️ if this project helped or inspired your own full-stack journey!
