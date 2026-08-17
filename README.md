@@ -1,43 +1,47 @@
-# 🛒 Bazario — Multi-Vendor E-Commerce Platform
+# 🛒 Multi-Vendor Marketplace & Order Orchestration System
 
-Welcome to **Bazario**, an end-to-end multi-vendor marketplace built to deliver seamless shopping for buyers, intuitive store management for vendors, and centralized oversight for administrators.
+An enterprise-grade, microservices-driven e-commerce platform built to solve complex order routing, splitting, and multi-vendor fulfillment challenges in modern digital marketplaces.
 
 ---
 
-## ✨ Core Features
+## 🎯 The Problem Solved
 
-* **Multi-Store Architecture:** Independent storefronts and product catalog management for individual vendors.
-* **Customer Experience:** Real-time search, category filtering, cart management, and streamlined checkout.
-* **Vendor Dashboard:** Product upload, inventory tracking, and order fulfillment workflows.
-* **Secure Authentication:** Role-based access control (Admin, Vendor, Customer) with secure password recovery.
-* **RESTful Backend:** Modular API architecture built with Java and Spring.
+Marketplaces aggregating multiple independent sellers often struggle with:
+* **Order Splitting:** Handling single-cart checkouts containing items from multiple distinct vendors.
+* **Intelligent Routing:** Directing sub-orders to the respective vendors instantly without bottlenecks.
+* **Fulfillment Tracking:** Maintaining end-to-end status visibility for buyers across fragmented vendor shipments.
+
+This platform implements an automated **Order Orchestration Engine** using message queues to split, dispatch, and track orders reliably at scale.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technologies |
+| Domain | Technologies |
 | :--- | :--- |
-| **Frontend** | Angular / TypeScript, HTML5, CSS3 |
-| **Backend** | Java, Spring Boot |
-| **Database** | Relational DB (MySQL / PostgreSQL) |
-| **Version Control** | Git & GitHub |
+| **Frontend** | Angular, TypeScript, HTML5, CSS3 |
+| **Backend** | Advanced Java, Spring Boot, Microservices Architecture |
+| **Messaging & Events** | RabbitMQ |
+| **Database** | MySQL |
+| **Domain** | E-Commerce / Marketplace Management |
 
 ---
 
-## 🚀 Getting Started
+## ⚡ Key Architectural Features
 
-### 1. Prerequisites
-* Node.js & npm (v18+)
-* Java Development Kit (JDK 17+)
-* Maven
-* Database server running locally
+* **Asynchronous Order Orchestration:** Uses **RabbitMQ** event-driven queues to decouple order placement, inventory reservations, and payment confirmations.
+* **Multi-Seller Sub-Order Splitting:** Automatically decomposes unified shopping cart transactions into vendor-specific dispatch queues.
+* **Microservices Ecosystem:** Independent services for user management, catalog, order processing, and vendor fulfillment.
+* **Role-Based Portals:** Tailored interfaces in **Angular** for Customers, Vendors (dashboard/inventory management), and System Admins.
+* **Reliable Persistence:** Normalized **MySQL** schema managing distributed transactional states across multi-vendor checkouts.
+  
+---
 
-### 2. Backend Setup
-```bash
-# Navigate to the backend directory
-cd Back_end/full_stack
+👥 Contributors
+Dibyajeet Mishra (@mishra-1234)
+Mrutyunjaya Sahoo (@Mrutyunjaya940)
+Samar pratap singh (@Mr-Samar-9708)
+Rosan Kumar Das (@KumarRosan7)
 
-# Build and run the server
-mvn clean install
-mvn spring-boot:run
+🌟 Show Your Support
+Give a ⭐️ if this project helped or inspired your own full-stack journey!
