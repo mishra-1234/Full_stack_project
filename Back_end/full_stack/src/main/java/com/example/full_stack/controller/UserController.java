@@ -2,6 +2,9 @@ package com.example.full_stack.controller;
 
 import com.example.full_stack.dto.LoginRequest;
 import com.example.full_stack.dto.LoginResponse;
+import com.example.full_stack.dto.ResetPasswordRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -32,12 +36,39 @@ public class UserController {
 
     // Login User
     @PostMapping("/login")
-    public LoginResponse loginUser(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
 
-        return userService.loginUser(
-                request.getEmail(),
-                request.getPassword()
-        );
+        Optional<User> userOptional = userService.findByEmail(request.getEmail());
+
+        // Case 1: Email not found — user is not registered
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new LoginResponse("USER_NOT_FOUND", null));
+        }
+
+        User user = userOptional.get();
+
+        // Case 2: Password mismatch
+        if (!user.getPassword().equals(request.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("WRONG_PASSWORD", null));
+        }
+
+        // Case 3: Success
+        return ResponseEntity.ok(new LoginResponse("Login successful", user));
+    }
+
+    // Reset Password
+    @PutMapping("/reset-password")
+    public ResponseEntity<LoginResponse> resetPassword(@RequestBody ResetPasswordRequest request) {
+        boolean success = userService.resetPassword(request.getEmail(), request.getNewPassword());
+
+        if (!success) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new LoginResponse("USER_NOT_FOUND", null));
+        }
+
+        return ResponseEntity.ok(new LoginResponse("Password reset successful", null));
     }
 
     // Get All Users
