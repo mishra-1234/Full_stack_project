@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+  import { Routes } from '@angular/router';
 import {Login} from './login/login';
 import { Home } from './home/home';
 
@@ -6,6 +6,7 @@ import { Signup } from './signup/signup';
 import { ForgotPassword } from './forgot-password/forgot-password';
 
 import { Shop } from './shop/shop';
+import { Help } from './help/help';
 export const routes: Routes = [
   {
     path: '',
@@ -26,5 +27,9 @@ export const routes: Routes = [
   {
     path: 'shop',
     component: Shop,
+  },
+  {
+    path: 'help',
+    component: Help,
   },
 ];
