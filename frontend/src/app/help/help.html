@@ -1,0 +1,177 @@
+<app-header></app-header>
+
+<main class="help-page">
+
+  <!-- HERO SECTION -->
+  <section class="help-hero">
+    <div class="hero-glow glow-a"></div>
+    <div class="hero-glow glow-b"></div>
+    <div class="hero-content">
+      <span class="eyebrow"><span class="eyebrow-dot"></span> Help Center</span>
+      <h1 class="headline">Got a Problem? <span class="accent">We're Here to Help!</span></h1>
+      <p class="subtext">Your question, our answer. Search below or choose a topic to get started.</p>
+      
+      <!-- Search bar -->
+      <div class="search-shell">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Search for help... (e.g. refund, payout, shipping)" [(ngModel)]="searchQuery" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Search results -->
+  <section *ngIf="searchQuery.trim()" class="search-results">
+    <h2 class="section-title">Search Results</h2>
+    <div class="search-list" *ngIf="filteredFaqs().length > 0; else noResults">
+      <div class="search-item" *ngFor="let result of filteredFaqs()">
+        <div class="search-item-header">
+          <span class="search-badge">{{ result.type }}</span>
+          <h3 class="search-question">{{ result.question }}</h3>
+        </div>
+        <p class="search-answer">{{ result.answer }}</p>
+      </div>
+    </div>
+    <ng-template #noResults>
+      <p class="no-results-msg">No results found. Please try different keywords.</p>
+    </ng-template>
+  </section>
+
+  <div *ngIf="!searchQuery.trim()">
+    <!-- TABS -->
+    <section class="help-tabs">
+      <div class="tab-buttons">
+        <button [class.active]="activeTab === 'buyer'" (click)="activeTab = 'buyer'">
+          <span class="tab-icon">🛒</span> Buyers
+        </button>
+        <button [class.active]="activeTab === 'seller'" (click)="activeTab = 'seller'">
+          <span class="tab-icon">🏪</span> Sellers
+        </button>
+      </div>
+    </section>
+
+    <!-- TOPIC CARDS -->
+    <section class="topics-section">
+      <h2 class="section-title">Quick Topics</h2>
+      <div class="topics-grid">
+        <div class="topic-card" *ngFor="let topic of (activeTab === 'buyer' ? buyerTopics : sellerTopics)" (click)="scrollToFaq(topic.faqIndex)">
+          <span class="topic-icon">{{ topic.icon }}</span>
+          <span class="topic-title">{{ topic.title }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section class="faq-section" id="faq-section">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div *ngFor="let faq of (activeTab === 'buyer' ? buyerFaqs : sellerFaqs); let i = index" 
+             class="faq-item" [class.open]="faq.open" [id]="'faq-' + i">
+          <button class="faq-question" (click)="toggleFaq(activeTab, i)">
+            <span>{{ faq.question }}</span>
+            <span class="faq-icon">{{ faq.open ? '−' : '+' }}</span>
+          </button>
+          <div class="faq-answer" *ngIf="faq.open">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- CONTACT & SUPPORT -->
+  <section class="contact-section">
+    <div class="contact-grid">
+      <!-- Left: Contact info -->
+      <div class="contact-info">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="contact-card">
+          <div class="contact-item">
+            <span class="contact-icon">📧</span> support@gmail.com
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span> +91-82603980839
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">💬</span> WhatsApp: +91-82603980839
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">🕐</span> Mon-Sat, 9 AM - 7 PM IST
+          </div>
+        </div>
+
+        <!-- Ticket Lookup -->
+        <div class="ticket-lookup">
+          <h3>Track Your Ticket</h3>
+          <div class="lookup-form">
+            <input type="text" placeholder="Enter Ticket ID" [(ngModel)]="lookupTicketId" />
+            <button (click)="lookupTicket()">Track</button>
+          </div>
+          
+          <div class="lookup-result" *ngIf="lookupResult">
+            <div class="result-header">
+              <h4>Ticket #{{ lookupResult.id }}</h4>
+              <span class="status-badge" [ngClass]="getStatusClass(lookupResult.status)">
+                {{ lookupResult.status }}
+              </span>
+            </div>
+            <p><strong>Name:</strong> {{ lookupResult.name }}</p>
+            <p><strong>Type:</strong> {{ lookupResult.issueType }}</p>
+            <p class="lookup-message">"{{ lookupResult.message }}"</p>
+            <p class="lookup-date">Created: {{ lookupResult.createdAt | date:'medium' }}</p>
+          </div>
+          <div class="error-msg" *ngIf="lookupError">{{ lookupError }}</div>
+        </div>
+      </div>
+
+      <!-- Right: Raise a Ticket form -->
+      <div class="ticket-form-wrapper">
+        <h2 class="section-title">Raise a Ticket</h2>
+        <form class="ticket-form" (ngSubmit)="submitTicket()">
+          
+          <div class="form-group">
+            <input type="text" placeholder="Your Name" [(ngModel)]="ticketName" name="name" required />
+          </div>
+          <div class="form-group">
+            <input type="email" placeholder="Email Address" [(ngModel)]="ticketEmail" name="email" required />
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Order ID (optional)" [(ngModel)]="ticketOrderId" name="orderId" />
+          </div>
+          <div class="form-group">
+            <select [(ngModel)]="ticketIssueType" name="issueType" required>
+              <option value="" disabled selected>Select Issue Type</option>
+              <option *ngFor="let type of issueTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <textarea placeholder="Describe your issue in detail..." [(ngModel)]="ticketMessage" name="message" rows="5" required></textarea>
+          </div>
+          
+          <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Submitting...' : 'Submit Ticket' }}
+          </button>
+          
+          <div class="success-msg" *ngIf="ticketSuccess">{{ ticketSuccess }}</div>
+          <div class="error-msg" *ngIf="ticketError">{{ ticketError }}</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- POLICY LINKS -->
+  <section class="policy-section">
+    <a routerLink="/return-policy">Return Policy</a>
+    <span class="dot-sep">•</span>
+    <a routerLink="/privacy">Privacy Policy</a>
+    <span class="dot-sep">•</span>
+    <a routerLink="/terms">Terms of Use</a>
+    <span class="dot-sep">•</span>
+    <a routerLink="/seller-agreement">Seller Agreement</a>
+  </section>
+
+</main>
+
+<app-footer></app-footer>
