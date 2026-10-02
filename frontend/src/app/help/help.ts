@@ -25,6 +25,7 @@ interface TopicCard {
   templateUrl: './help.html',
   styleUrl: './help.css'
 })
+
 export class Help {
   buyerFaqs: FaqItem[] = [
     { question: 'How can I track my order?', answer: 'You can track your order in the "My Orders" section. Click on the order to see real-time updates.', open: false },
