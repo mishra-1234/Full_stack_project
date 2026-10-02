@@ -7,10 +7,15 @@ import { ForgotPassword } from './forgot-password/forgot-password';
 
 import { Shop } from './shop/shop';
 import { Help } from './help/help';
+import { Sell } from './sell/sell';
 export const routes: Routes = [
   {
     path: '',
     component: Home,
+  },
+  {
+    path: 'sell',
+    component: Sell,
   },
   {
     path: 'login',
