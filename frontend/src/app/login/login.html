@@ -52,10 +52,10 @@
         <span>{{ successMessage }}</span>
       </div>
 
-      <!-- Error: Email not registered -->
+      <!-- Error: Account not registered -->
       <div class="alert alert-error" *ngIf="errorType === 'not_registered'" role="alert">
         <span class="alert-icon">!</span>
-        <span>This email is not registered. <a routerLink="/signup" class="alert-action-link">Sign Up here</a></span>
+        <span>This email or mobile number is not registered. <a routerLink="/signup" class="alert-action-link">Sign Up here</a></span>
       </div>
 
       <!-- Error: Wrong password -->
@@ -72,9 +72,9 @@
 
       <form class="login-form" #loginForm="ngForm" (ngSubmit)="login(loginForm)" novalidate>
 
-        <!-- Email -->
+        <!-- Email or Phone -->
         <div class="field-group">
-          <label for="email" class="field-label">Email address</label>
+          <label for="email" class="field-label">Email address or Mobile number</label>
           <div class="input-shell" [class.has-error]="showEmailError">
             <svg class="field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M3 6.5C3 5.67 3.67 5 4.5 5h15c.83 0 1.5.67 1.5 1.5v11c0 .83-.67 1.5-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5v-11Z" stroke="currentColor" stroke-width="1.6"/>
@@ -83,10 +83,10 @@
             <input
               id="email"
               name="email"
-              type="email"
+              type="text"
               class="field-input"
-              placeholder="Email address"
-              autocomplete="email"
+              placeholder="Enter email or 10-digit mobile"
+              autocomplete="username"
               [(ngModel)]="email"
               #emailModel="ngModel"
               required
@@ -95,7 +95,7 @@
             />
           </div>
           <span class="field-error" id="email-error" *ngIf="showEmailError">
-            Please enter a valid email address.
+            Please enter a valid email address or 10-digit mobile number.
           </span>
         </div>
 

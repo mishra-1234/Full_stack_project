@@ -41,6 +41,14 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> findByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
+
+    public Optional<User> findByEmailOrPhone(String identifier) {
+        return userRepository.findByEmailOrPhone(identifier);
+    }
+
     public boolean resetPassword(String email, String newPassword) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
@@ -52,18 +60,18 @@ public class UserService {
         return true;
     }
 
-    public LoginResponse loginUser(String email, String password) {
+    public LoginResponse loginUser(String identifier, String password) {
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<User> userOptional = userRepository.findByEmailOrPhone(identifier);
 
         if (userOptional.isEmpty()) {
-            return new LoginResponse("Invalid email or password", null);
+            return new LoginResponse("Invalid email/phone or password", null);
         }
 
         User user = userOptional.get();
 
         if (!user.getPassword().equals(password)) {
-            return new LoginResponse("Invalid email or password", null);
+            return new LoginResponse("Invalid email/phone or password", null);
         }
 
         return new LoginResponse("Login successful", user);

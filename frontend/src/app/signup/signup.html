@@ -80,6 +80,27 @@
           </p>
         </div>
 
+        <!-- Mobile Number -->
+        <div class="form-group" [class.has-error]="isInvalid('phone')">
+          <div class="input-wrap">
+            <span class="input-icon">📱</span>
+            <input
+              id="phone"
+              type="tel"
+              formControlName="phone"
+              placeholder=" "
+              autocomplete="tel"
+              [attr.aria-invalid]="isInvalid('phone')"
+            />
+            <label for="phone">Mobile Number <span class="required">*</span></label>
+          </div>
+          <p class="error-msg" *ngIf="isInvalid('phone')">
+            <span class="error-icon">⚠️</span>
+            <span *ngIf="phone?.errors?.['required']">Mobile number is required.</span>
+            <span *ngIf="!phone?.errors?.['required'] && phone?.errors?.['pattern']">Please enter a valid 10-digit mobile number.</span>
+          </p>
+        </div>
+
         <!-- Password -->
         <div class="form-group" [class.has-error]="isInvalid('password')">
           <div class="input-wrap">

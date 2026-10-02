@@ -19,10 +19,21 @@ public class User {
 
     private String password;
 
+    @Column(length = 20)
+    private String phone;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     public User() {
+    }
+
+    public User(String name, String email, String phone, String password, Role role) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.role = role;
     }
 
     public User(String name, String email, String password, Role role) {
@@ -62,6 +73,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Role getRole() {

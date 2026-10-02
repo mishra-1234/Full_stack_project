@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 interface LoginResponse {
   message: string;
@@ -41,16 +42,19 @@ export class Login {
 
   private readonly loginUrl = 'http://localhost:8080/users/login';
   private readonly emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  private readonly phonePattern = /^[0-9]{10}$/;
 
   constructor(
     private http: HttpClient,
     private router: Router,
+    private authService: AuthService,
   ) {}
 
   // ---------------- Validation helpers ----------------
 
   get isEmailValid(): boolean {
-    return this.emailPattern.test(this.email.trim());
+    const val = this.email.trim();
+    return this.emailPattern.test(val) || this.phonePattern.test(val);
   }
 
   get isPasswordValid(): boolean {
@@ -93,8 +97,12 @@ export class Login {
 
     this.isLoading = true;
 
+    const input = this.email.trim();
+    const isPhone = this.phonePattern.test(input);
+
     const payload = {
-      email: this.email.trim(),
+      email: isPhone ? '' : input,
+      phone: isPhone ? input : '',
       password: this.password,
     };
 
@@ -108,9 +116,9 @@ export class Login {
     this.isLoading = false;
     this.successMessage = response?.message || 'Login successful';
 
-    const storage = this.rememberMe ? localStorage : sessionStorage;
-    storage.setItem('user', JSON.stringify(response.user));
-    localStorage.setItem('isLoggedIn', 'true');
+    if (response?.user) {
+      this.authService.login(response.user, this.rememberMe);
+    }
 
     // Small delay so the success state is visible before navigating
     setTimeout(() => {
@@ -122,9 +130,9 @@ export class Login {
     this.isLoading = false;
 
     if (err.status === 404) {
-      // User email not found in database
+      // User email or phone not found in database
       this.errorType = 'not_registered';
-      this.errorMessage = 'This email is not registered. Please sign up first.';
+      this.errorMessage = 'This email or mobile number is not registered. Please sign up first.';
     } else if (err.status === 401) {
       // Password mismatch
       this.errorType = 'wrong_password';

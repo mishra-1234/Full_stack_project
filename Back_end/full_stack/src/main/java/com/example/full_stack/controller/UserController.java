@@ -37,10 +37,10 @@ public class UserController {
     // Login User
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
+        String identifier = request.getIdentifier();
+        Optional<User> userOptional = userService.findByEmailOrPhone(identifier);
 
-        Optional<User> userOptional = userService.findByEmail(request.getEmail());
-
-        // Case 1: Email not found — user is not registered
+        // Case 1: Email or Phone not found — user is not registered
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new LoginResponse("USER_NOT_FOUND", null));

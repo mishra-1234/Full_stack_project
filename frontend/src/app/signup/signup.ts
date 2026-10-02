@@ -57,6 +57,13 @@ export class Signup {
           ],
         ],
         email: ['', [Validators.required, Validators.email]],
+        phone: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(/^[0-9]{10}$/),
+          ],
+        ],
         password: [
           '',
           [
@@ -78,6 +85,9 @@ export class Signup {
   }
   get email() {
     return this.signupForm.get('email');
+  }
+  get phone() {
+    return this.signupForm.get('phone');
   }
   get password() {
     return this.signupForm.get('password');
@@ -158,11 +168,12 @@ export class Signup {
 
     this.isSubmitting = true;
 
-    const { fullName, email, password, role } = this.signupForm.value;
+    const { fullName, email, phone, password, role } = this.signupForm.value;
 
     const user = {
       name: fullName,
       email: email,
+      phone: phone,
       password: password,
       role: role.toUpperCase()
     };
