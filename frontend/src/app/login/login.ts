@@ -3,18 +3,25 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
 
 interface LoginResponse {
   message: string;
-  user: {
+  user?: {
     id?: string | number;
     name?: string;
     email?: string;
     role?: string;
     [key: string]: unknown;
   };
+  vendor?: {
+    id?: string | number;
+    shopName?: string;
+    email?: string;
+    lastLoginTime?: string;
+    [key: string]: unknown;
+  };
 }
-
 
 @Component({
   selector: 'app-login',
@@ -31,15 +38,16 @@ export class Login {
   // ---------------- UI state ----------------
   showPassword = false;
   isLoading = false;
+  loginFailed = false;
   submitted = false;
 
   errorMessage = '';
-  errorType: 'none' | 'not_registered' | 'wrong_password' | 'server' | 'generic' = 'none';
   successMessage = '';
 
   currentYear = new Date().getFullYear();
 
-  private readonly loginUrl = 'http://localhost:8080/users/login';
+  private readonly customerLoginUrl = 'http://localhost:8080/users/login';
+  private readonly vendorLoginUrl = 'http://localhost:8080/vendors/login';
   private readonly emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   constructor(
@@ -77,7 +85,6 @@ export class Login {
 
   private resetMessages(): void {
     this.errorMessage = '';
-    this.errorType = 'none';
     this.successMessage = '';
   }
 
@@ -86,6 +93,7 @@ export class Login {
   login(form?: NgForm): void {
     this.submitted = true;
     this.resetMessages();
+    this.loginFailed = false;
 
     if (!this.isFormValid || this.isLoading) {
       return;
@@ -98,44 +106,73 @@ export class Login {
       password: this.password,
     };
 
-    this.http.post<LoginResponse>(this.loginUrl, payload).subscribe({
-      next: (response) => this.handleLoginSuccess(response),
-      error: (err: HttpErrorResponse) => this.handleLoginError(err),
+    // Step 1: Customer login try karein
+    this.http.post<LoginResponse>(this.customerLoginUrl, payload).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.handleCustomerSuccess(response);
+      },
+      error: () => {
+        // Step 2: Agar Customer nahi mila, toh Vendor login try karein
+        this.http
+          .post<LoginResponse>(this.vendorLoginUrl, payload)
+          .pipe(
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe({
+            next: (response) => {
+              this.handleVendorSuccess(response);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.handleLoginError(err);
+            },
+          });
+      },
     });
   }
 
-  private handleLoginSuccess(response: LoginResponse): void {
-    this.isLoading = false;
-    this.successMessage = response?.message || 'Login successful';
-
+  private handleCustomerSuccess(response: LoginResponse): void {
+    this.successMessage = response?.message || 'Customer Login successful';
     const storage = this.rememberMe ? localStorage : sessionStorage;
-    storage.setItem('user', JSON.stringify(response.user));
-    localStorage.setItem('isLoggedIn', 'true');
 
-    // Small delay so the success state is visible before navigating
-    setTimeout(() => {
-      this.router.navigate(['/']);
-    }, 600);
+    const dataToStore = response.user || response;
+    storage.setItem('user', JSON.stringify(dataToStore));
+    storage.setItem('role', 'CUSTOMER');
+    storage.setItem('isLoggedIn', 'true');
+
+    console.log('Saved customer data:', dataToStore);
+
+    // Dashboard navigation
+    this.router.navigate(['/customer-dashboard']);
+  }
+
+  private handleVendorSuccess(response: LoginResponse): void {
+    this.successMessage = response?.message || 'Vendor Login successful';
+    const storage = this.rememberMe ? localStorage : sessionStorage;
+
+    // Agar response.vendor null ho toh pure response object ko fallback rakhein
+    const dataToStore = response.vendor || response;
+    storage.setItem('vendor', JSON.stringify(dataToStore));
+    storage.setItem('role', 'VENDOR');
+    storage.setItem('isLoggedIn', 'true');
+
+    console.log('Saved vendor data:', dataToStore);
+
+    // Dashboard navigation
+    this.router.navigate(['/vendor-dashboard']);
   }
 
   private handleLoginError(err: HttpErrorResponse): void {
-    this.isLoading = false;
+    this.loginFailed = true;
 
-    if (err.status === 404) {
-      // User email not found in database
-      this.errorType = 'not_registered';
-      this.errorMessage = 'This email is not registered. Please sign up first.';
-    } else if (err.status === 401) {
-      // Password mismatch
-      this.errorType = 'wrong_password';
-      this.errorMessage = 'Incorrect password. Try again or reset your password.';
+    if (err.status === 401 || err.status === 400 || err.status === 404) {
+      this.errorMessage = 'Invalid email or password';
     } else if (err.status === 0) {
-      this.errorType = 'server';
       this.errorMessage = 'Unable to reach server. Please check your connection.';
     } else {
-      this.errorType = 'generic';
-      this.errorMessage = 'Something went wrong. Please try again.';
+      this.errorMessage = 'Invalid email or password';
     }
   }
 }
-

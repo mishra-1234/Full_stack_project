@@ -1,44 +1,24 @@
 <div class="login-page">
 
-  <!-- Top Navigation Header -->
-  <header class="top-nav">
-    <a routerLink="/" class="nav-brand">
-      <span class="brand-store-icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M3 9L4.5 4H19.5L21 9M3 9V20C3 20.55 3.45 21 4 21H20C20.55 21 21 20.55 21 20V9M3 9H21M9 21V14H15V21" stroke="#FBB03B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M3 9C3 10.1 3.9 11 5 11C6.1 11 7 10.1 7 9C7 10.1 7.9 11 9 11C10.1 11 11 10.1 11 9C11 10.1 11.9 11 13 11C14.1 11 15 10.1 15 9C15 10.1 15.9 11 17 11C18.1 11 19 10.1 19 9" stroke="#FBB03B" stroke-width="1.8"/>
-        </svg>
-      </span>
-      <span class="nav-brand-text">Bazario</span>
-    </a>
-  </header>
-
-  <!-- Soft background decor & registration-style small floating watermark particles -->
-  <div class="bg-decor" aria-hidden="true">
-    <span class="orb orb-violet"></span>
-    <span class="orb orb-gold"></span>
-    <span class="orb orb-rose"></span>
-    <span class="particle p1">🛍️</span>
-    <span class="particle p2">🏷️</span>
-    <span class="particle p3">📦</span>
-    <span class="particle p4">✨</span>
-    <span class="particle p5">💎</span>
-    <span class="particle p6">🎁</span>
-    <span class="particle p7">🛒</span>
+  <!-- Ambient background shapes -->
+  <div class="bg-shapes" aria-hidden="true">
+    <span class="shape shape-a"></span>
+    <span class="shape shape-b"></span>
+    <span class="shape shape-c"></span>
+    <div class="bg-grid"></div>
   </div>
 
   <div class="login-wrapper">
 
     <div class="login-card">
 
-      <!-- Brand Store Icon Header -->
+      <!-- Brand -->
       <div class="login-brand">
-        <div class="store-badge">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M3 9L4.5 4H19.5L21 9M3 9V20C3 20.55 3.45 21 4 21H20C20.55 21 21 20.55 21 20V9M3 9H21M9 21V14H15V21" stroke="#FBB03B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M3 9C3 10.1 3.9 11 5 11C6.1 11 7 10.1 7 9C7 10.1 7.9 11 9 11C10.1 11 11 10.1 11 9C11 10.1 11.9 11 13 11C14.1 11 15 10.1 15 9C15 10.1 15.9 11 17 11C18.1 11 19 10.1 19 9" stroke="#FBB03B" stroke-width="2"/>
-          </svg>
-        </div>
+        <span class="brand-mark">
+          <span class="stall-roof"></span>
+          <span class="stall-counter"></span>
+        </span>
+        <span class="brand-name">Bazario</span>
       </div>
 
       <div class="login-head">
@@ -52,20 +32,8 @@
         <span>{{ successMessage }}</span>
       </div>
 
-      <!-- Error: Email not registered -->
-      <div class="alert alert-error" *ngIf="errorType === 'not_registered'" role="alert">
-        <span class="alert-icon">!</span>
-        <span>This email is not registered. <a routerLink="/signup" class="alert-action-link">Sign Up here</a></span>
-      </div>
-
-      <!-- Error: Wrong password -->
-      <div class="alert alert-error" *ngIf="errorType === 'wrong_password'" role="alert">
-        <span class="alert-icon">!</span>
-        <span>Incorrect password. <a routerLink="/forgot-password" class="alert-action-link">Forgot Password?</a></span>
-      </div>
-
-      <!-- Error: Server / Generic -->
-      <div class="alert alert-error" *ngIf="errorType === 'server' || errorType === 'generic'" role="alert">
+      <!-- Error message -->
+      <div class="alert alert-error" *ngIf="errorMessage" role="alert">
         <span class="alert-icon">!</span>
         <span>{{ errorMessage }}</span>
       </div>
@@ -85,7 +53,7 @@
               name="email"
               type="email"
               class="field-input"
-              placeholder="Email address"
+              placeholder="you@company.com"
               autocomplete="email"
               [(ngModel)]="email"
               #emailModel="ngModel"
@@ -101,7 +69,10 @@
 
         <!-- Password -->
         <div class="field-group">
-          <label for="password" class="field-label">Password</label>
+          <div class="field-label-row">
+            <label for="password" class="field-label">Password</label>
+            <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+          </div>
           <div class="input-shell" [class.has-error]="showPasswordError">
             <svg class="field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <rect x="4" y="10.5" width="16" height="9.5" rx="2" stroke="currentColor" stroke-width="1.6"/>
@@ -112,7 +83,7 @@
               name="password"
               [type]="showPassword ? 'text' : 'password'"
               class="field-input"
-              placeholder="Password"
+              placeholder="Enter your password"
               autocomplete="current-password"
               [(ngModel)]="password"
               #passwordModel="ngModel"
@@ -142,27 +113,26 @@
           </span>
         </div>
 
-        <!-- Remember me & Forgot Password Row -->
+        <!-- Remember me -->
         <div class="field-row">
           <label class="checkbox-row">
             <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" />
-            <span class="checkbox-box">
-              <svg class="check-icon" viewBox="0 0 14 14" fill="none">
-                <path d="M2.5 7L5.5 10L11.5 4" stroke="#181133" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
+            <span class="checkbox-box"></span>
             <span class="checkbox-label">Remember me</span>
           </label>
-          <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
         </div>
 
         <!-- Submit -->
         <button
           type="submit"
           class="login-btn"
-          [disabled]="isLoading || (submitted && !isFormValid)"
+          [disabled]="isLoading"
         >
           <span class="btn-spinner" *ngIf="isLoading"></span>
+
+          <span *ngIf="!isLoading && errorMessage" class="login-error-test">
+  Login failed
+</span>
           <span>{{ isLoading ? 'Logging in…' : 'Log In' }}</span>
         </button>
 
@@ -181,4 +151,3 @@
 
   </div>
 </div>
-

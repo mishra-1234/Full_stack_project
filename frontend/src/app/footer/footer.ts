@@ -5,10 +5,8 @@ import {
   OnDestroy,
   ElementRef,
   HostListener,
-  Inject,
-  PLATFORM_ID,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -111,18 +109,11 @@ export class Footer implements OnInit, AfterViewInit, OnDestroy {
 
   private observer?: IntersectionObserver;
 
-  constructor(
-    private host: ElementRef<HTMLElement>,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  constructor(private host: ElementRef<HTMLElement>) {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') {
-      return;
-    }
-
     this.observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -145,15 +136,11 @@ export class Footer implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:scroll')
   onWindowScroll(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.showBackToTop = window.scrollY > 480;
-    }
+    this.showBackToTop = window.scrollY > 480;
   }
 
   scrollToTop(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   submitNewsletter(event: Event): void {
@@ -166,4 +153,3 @@ export class Footer implements OnInit, AfterViewInit, OnDestroy {
     }, 3000);
   }
 }
-

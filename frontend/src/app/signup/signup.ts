@@ -43,7 +43,7 @@ export class Signup {
     private fb: FormBuilder,
     private router: Router,
 
-    private http:HttpClient
+    private http: HttpClient,
   ) {
     this.signupForm = this.fb.group(
       {
@@ -150,45 +150,51 @@ export class Signup {
         return '';
     }
   }
-  onSubmit(): void {
-    if (this.signupForm.invalid || this.isSubmitting) {
-      this.signupForm.markAllAsTouched();
+  onSubmit() {
+    if (this.signupForm.invalid) {
       return;
     }
 
-    this.isSubmitting = true;
+    const formVal = this.signupForm.value;
 
-    const { fullName, email, password, role } = this.signupForm.value;
 
-    const user = {
-      name: fullName,
-      email: email,
-      password: password,
-      role: role.toUpperCase()
-    };
+    if (formVal.role === 'vendor') {
+      const vendorData = {
+        shopName: formVal.fullName, // Vendor entity me 'shopName' field hai
+        email: formVal.email,
+        password: formVal.password,
+        phone: '9999999999', // temporary default value taaki validation pass ho jaye
+      };
 
-    this.http.post('http://localhost:8080/users', user).subscribe({
-
-      next: (response) => {
-
-        console.log('Signup successful:', response);
-
-        this.isSubmitting = false;
-        this.submitSuccess = true;
-
-        setTimeout(() => {
+      this.http.post('http://localhost:8080/vendors/signup', vendorData).subscribe({
+        next: (res) => {
+          alert('Vendor registered successfully!');
           this.router.navigate(['/login']);
-        }, 1500);
-      },
+        },
+        error: (err) => {
+          console.error('Vendor signup error details:', err);
+          alert('Vendor signup failed! Check console.');
+        },
+      });
+    } else {
+      // Agar user ne CUSTOMER select kiya hai
+      const customerData = {
+        name: formVal.fullName,
+        email: formVal.email,
+        password: formVal.password,
+        role: 'CUSTOMER',
+      };
 
-      error: (error) => {
-
-        console.error('Signup failed:', error);
-
-        this.isSubmitting = false;
-      }
-
-    });
+      this.http.post('http://localhost:8080/users', customerData).subscribe({
+        next: (res) => {
+          alert('Customer registered successfully!');
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error('Customer signup error details:', err);
+          alert('Customer signup failed! Check console.');
+        },
+      });
+    }
   }
-
 }
