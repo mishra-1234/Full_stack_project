@@ -9,6 +9,8 @@
 *.sublime-workspace
 
 # Java / Spring Boot
+backend/**/target/
+backend/target/
 Back_end/**/target/
 
 # Node.js

@@ -3,7 +3,7 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "737f6394-2280-489b-95cd-877eec3353fd"
+    "analytics": "35bd5c88-2a95-4204-9b92-a72f79be69fc"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -47,8 +47,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "15kB",
-                  "maximumError": "25kB"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -59,7 +59,7 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
